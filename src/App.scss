@@ -1,5 +1,6 @@
 body {
   margin: 16px 40px;
+  font-family: Roboto, sans-serif;
 }
 
 .header {
@@ -71,7 +72,7 @@ body {
     content: "";
     width: 100%;
     height: 8px;
-    background-color: blue;
+    background: -webkit-linear-gradient(#31d9c3, #07a7e3);
     position: absolute;
     left: 0;
     top: 170px;
@@ -80,7 +81,91 @@ body {
   &__picture {
     width: 140px;
     height: 140px;
-    background-color: grey;
+    background-color: #dee7eb;
+  }
+
+  &__controls {
+    display: flex;
+    margin-top: 45px;
+    align-items: center;
+  }
+}
+
+.controls {
+
+  &__prev,
+  &__play,
+  &__next {
+    border: none;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    outline: none;
+  }
+
+  &__prev {
+    background-image: url("icons/prev.png");
+    width: 17px;
+    height: 14px;
+  }
+
+  &__play {
+    background-image: url("icons/play.png");
+    width: 19px;
+    height: 21px;
+    margin: 0 36px;
+  }
+
+  &__next {
+    background-image: url("icons/next.png");
+    width: 17px;
+    height: 14px;
+  }
+
+  &__img {
+    width: 32px;
+    height: 32px;
+    background-color: #dee7eb;
+    border-radius: 15px;
+    position: relative;
+    margin-left: 40px;
+  }
+
+  &__picture {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+
+  &__song {
+    position: absolute;
+    left: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px;
+    color: #72848c;
+  }
+
+  &__title,
+  &__artist {
+    margin: 0;
+    padding: 0;
+  }
+
+  &__title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 7px;
+  }
+
+  &__artist {
+    font-size: 12px;
+  }
+
+  &__volume {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 15px;
   }
 }
 
@@ -90,6 +175,9 @@ body {
   border-radius: 5px;
   box-shadow: 0 5px 5px rgba(0,0,0,0.05);
   overflow-y: auto;
+  color: #8d9ba2;
+  font-size: 14px;
+  font-weight: bold;
 
   &__list {
     list-style: none;

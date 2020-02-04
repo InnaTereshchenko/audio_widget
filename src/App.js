@@ -17,6 +17,15 @@ const getSongs = async(search) => {
   return response.json();
 };
 
+// const debounce = (f, delay) => {
+//   let timerId = 0;
+//
+//   return (...args) => {
+//     clearTimeout(timerId);
+//     timerId = setTimeout(f, delay, ...args);
+//   };
+// };
+
 function App() {
   const [songs, setSongs] = useState([]);
   const [searchValue, setSearchValue] = useState('');
@@ -30,6 +39,11 @@ function App() {
   useEffect(() => {
     getSongs(searchValue).then(data => setSongs(data.data));
   });
+
+  const handleSearchValue = (e) => {
+    e.preventDefault();
+    setSearchValue(e.target.value);
+  };
 
   const chooseCurrentSong = (songIndex) => {
     setCurrentSong(songs.find((song, i) => i === songIndex));
@@ -46,7 +60,7 @@ function App() {
               type="text"
               className="form__input"
               value={searchValue}
-              onChange={e => setSearchValue(e.target.value)}
+              onChange={handleSearchValue}
             />
           </lable>
           <img
