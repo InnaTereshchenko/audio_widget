@@ -3,8 +3,22 @@ import PropTypes from 'prop-types';
 import WaveSurfer from 'wavesurfer.js';
 import { peaks } from './peaks';
 
+const secondsToTimestamp = (seconds) => {
+  const sec = Math.floor(seconds);
+  let h = Math.floor(sec / 3600);
+  let m = Math.floor((sec - (h * 3600)) / 60);
+  let s = sec - (h * 3600) - (m * 60);
+
+  h = h < 10 ? `0${h}` : h;
+  m = m < 10 ? `0${m}` : m;
+  s = s < 10 ? `0${s}` : s;
+
+  return `${m}:${s}`;
+};
+
 const SongWidget = ({ currentSong, currentSongIndex, chooseCurrentSong }) => {
   const [wave, setWave] = useState(null);
+  const [currentTime, setCurrentTime] = useState('00:00');
   const getTime = (seconds) => {
     const min = Math.floor(seconds / 60);
     const sec = seconds % 60;
@@ -34,12 +48,26 @@ const SongWidget = ({ currentSong, currentSongIndex, chooseCurrentSong }) => {
     wavesurfer.load(aud, peaks);
   }, []);
 
+  const playPause = () => {
+    wave.playPause();
+    wave.on('audioprocess', updateTimer);
+  };
+
+  const updateTimer = () => {
+    const formattedTime = wave.getCurrentTime();
+
+    const time = secondsToTimestamp(formattedTime);
+
+    setCurrentTime(time);
+  };
+
   return (
     <section className="widget">
       <div className="widget__visual">
         <img src={currentSong.album.cover} className="widget__picture" alt="" />
         <div className="widget__visualizer">
-          <p>{getTime(currentSong.duration)}</p>
+          <p className="widget__current-time">{currentTime}</p>
+          <p className="widget__all-time">{getTime(currentSong.duration)}</p>
           <div id="waveform" className="widget__waveform" />
         </div>
       </div>
@@ -54,7 +82,7 @@ const SongWidget = ({ currentSong, currentSongIndex, chooseCurrentSong }) => {
         <button
           type="button"
           className="controls__play"
-          onClick={() => wave.playPause()}
+          onClick={playPause}
         />
         <button
           type="button"
@@ -82,9 +110,10 @@ const SongWidget = ({ currentSong, currentSongIndex, chooseCurrentSong }) => {
             type="range"
             title="volume"
             min="0"
-            max="10"
-            step="1"
+            max="1"
+            step="0.1"
             className="controls__range"
+            onChange={e => wave.setVolume(e.target.value)}
           />
         </div>
       </div>

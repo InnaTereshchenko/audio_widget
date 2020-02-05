@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import { connect } from 'react-redux';
 import './App.scss';
 import SongWidget from './SongWidget';
 import SongList from './SongList';
@@ -73,7 +72,7 @@ function App() {
       <header className="header">
         <h1 className="header__title">VISAGE</h1>
         <form className="header__form form">
-          <lable>
+          <lable className="form__lable">
             Search
             <input
               type="text"
@@ -96,6 +95,7 @@ function App() {
           currentSongIndex={currentSongIndex}
         />
         <SongList
+          currentSong={currentSong}
           songs={songs}
           chooseCurrentSong={chooseCurrentSong}
           isSearching={isSearching}
@@ -105,12 +105,4 @@ function App() {
   );
 }
 
-const mapStateToProps = state => ({
-
-});
-
-const mapDispatchToProps = {
-
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
