@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
+import { connect } from 'react-redux';
 import './App.scss';
 import SongWidget from './SongWidget';
 import SongList from './SongList';
@@ -6,7 +7,7 @@ import SongList from './SongList';
 const getSongs = async(search) => {
   const searchValue = search.split(' ').join('-');
   // eslint-disable-next-line max-len
-  const response = await fetch(`https://deezerdevs-deezer.p.rapidapi.com/search?q=${searchValue || `eminem`}`, {
+  const response = await fetch(`https://deezerdevs-deezer.p.rapidapi.com/search?q=${searchValue}`, {
     method: 'GET',
     headers: {
       'x-rapidapi-host': 'deezerdevs-deezer.p.rapidapi.com',
@@ -17,36 +18,54 @@ const getSongs = async(search) => {
   return response.json();
 };
 
-// const debounce = (f, delay) => {
-//   let timerId = 0;
-//
-//   return (...args) => {
-//     clearTimeout(timerId);
-//     timerId = setTimeout(f, delay, ...args);
-//   };
-// };
+const debounce = (f, delay) => {
+  let timerId = 0;
+
+  return (...args) => {
+    clearTimeout(timerId);
+    timerId = setTimeout(f, delay, ...args);
+  };
+};
 
 function App() {
-  const [songs, setSongs] = useState([]);
+  const [songs, setSongs] = useState(null);
   const [searchValue, setSearchValue] = useState('');
   const [currentSong, setCurrentSong] = useState(
     {
-      artist: {},
-      album: {},
+      title: 'Nocturne in E Flat Major, Op. 9, No. 2',
+      // eslint-disable-next-line max-len
+      preview: 'https://cdns-preview-a.dzcdn.net/stream/c-a09a10972a4b3421a8374824e4540287-2.mp3',
+      duration: 284,
+      artist: {
+        name: 'Frédéric Chopin',
+        picture: 'https://api.deezer.com/artist/8473/image',
+      },
+      album: {
+        cover: 'https://api.deezer.com/album/7553472/image',
+      },
     }
   );
-
-  useEffect(() => {
-    getSongs(searchValue).then(data => setSongs(data.data));
-  });
+  const [isSearching, setIsSearching] = useState(false);
+  const [currentSongIndex, setCurrentSongIndex] = useState(-1);
 
   const handleSearchValue = (e) => {
-    e.preventDefault();
+    setIsSearching(true);
     setSearchValue(e.target.value);
+    planSearch(e.target.value);
   };
+
+  const search = (value) => {
+    getSongs(value).then(data => setSongs(data.data));
+    setIsSearching(false);
+  };
+
+  const planSearch = useCallback(
+    debounce(search, 700), []
+  );
 
   const chooseCurrentSong = (songIndex) => {
     setCurrentSong(songs.find((song, i) => i === songIndex));
+    setCurrentSongIndex(songIndex);
   };
 
   return (
@@ -74,11 +93,24 @@ function App() {
         <SongWidget
           currentSong={currentSong}
           chooseCurrentSong={chooseCurrentSong}
+          currentSongIndex={currentSongIndex}
         />
-        <SongList songs={songs} chooseCurrentSong={chooseCurrentSong} />
+        <SongList
+          songs={songs}
+          chooseCurrentSong={chooseCurrentSong}
+          isSearching={isSearching}
+        />
       </main>
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = state => ({
+
+});
+
+const mapDispatchToProps = {
+
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

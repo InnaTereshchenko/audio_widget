@@ -1,15 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import WaveSurfer from 'wavesurfer.js';
+import { peaks } from './peaks';
 
-const SongWidget = ({ currentSong }) => {
-  const player = document.getElementById('music');
+const SongWidget = ({ currentSong, currentSongIndex, chooseCurrentSong }) => {
+  const [wave, setWave] = useState(null);
+  const getTime = (seconds) => {
+    const min = Math.floor(seconds / 60);
+    const sec = seconds % 60;
+
+    return `${min}:${(sec > 9) ? sec : `0${sec}`}`;
+  };
+
+  const changeSong = (step) => {
+    chooseCurrentSong(currentSongIndex + step);
+  };
+
+  useEffect(() => {
+    const aud = document.querySelector('#music');
+    const wavesurfer = WaveSurfer.create({
+      barWidth: 1,
+      cursorWidth: 1,
+      container: '#waveform',
+      backend: 'MediaElement',
+      height: 100,
+      progressColor: '#4a74a5',
+      responsive: true,
+      waveColor: '#ccc',
+      cursorColor: '#4a74a5',
+    });
+
+    setWave(wavesurfer);
+    wavesurfer.load(aud, peaks);
+  }, []);
 
   return (
     <section className="widget">
       <div className="widget__visual">
         <img src={currentSong.album.cover} className="widget__picture" alt="" />
         <div className="widget__visualizer">
-          <p>{currentSong.duration}</p>
+          <p>{getTime(currentSong.duration)}</p>
+          <div id="waveform" className="widget__waveform" />
         </div>
       </div>
       <div className="widget__controls controls">
@@ -18,17 +49,17 @@ const SongWidget = ({ currentSong }) => {
         <button
           type="button"
           className="controls__prev"
-          onClick={() => player.play()}
+          onClick={() => changeSong(-1)}
         />
         <button
           type="button"
           className="controls__play"
-          onClick={() => player.play()}
+          onClick={() => wave.playPause()}
         />
         <button
           type="button"
           className="controls__next"
-          onClick={() => player.play()}
+          onClick={() => changeSong(1)}
         />
         <div className="controls__img">
           <img
@@ -64,6 +95,8 @@ const SongWidget = ({ currentSong }) => {
 
 SongWidget.propTypes = {
   currentSong: PropTypes.shape().isRequired,
+  currentSongIndex: PropTypes.number.isRequired,
+  chooseCurrentSong: PropTypes.func.isRequired,
 };
 
 export default SongWidget;

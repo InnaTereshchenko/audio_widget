@@ -89,6 +89,13 @@ body {
     margin-top: 45px;
     align-items: center;
   }
+
+  &__waveform {
+    width: 500px;
+    position: absolute;
+    right: 30px;
+    top: 40px;
+  }
 }
 
 .controls {
@@ -186,12 +193,33 @@ body {
   }
 
   &__song {
-    padding: 14px 0;
-    border-bottom: 1px solid grey;
+    padding: 15px 0;
+    border-bottom: 1px solid #8d9ba2;
     cursor: pointer;
+    display: flex;
+    align-items: center;
   }
 
   &__song span {
+    margin-left: 30px;
     margin-right: 10px;
+  }
+
+  &__song > span:nth-child(2) {
+    display: inline-block;
+    width: 60%;
+  }
+
+  &__song > span:last-child {
+    float: right;
+  }
+
+  &__text {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  &__searching {
+    text-align: center;
   }
 }

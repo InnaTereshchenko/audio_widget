@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const SongList = ({ songs, chooseCurrentSong }) => {
+const SongList = ({ songs, chooseCurrentSong, isSearching }) => {
   const getTime = (seconds) => {
     const min = Math.floor(seconds / 60);
     const sec = seconds % 60;
@@ -12,6 +12,7 @@ const SongList = ({ songs, chooseCurrentSong }) => {
   return (
     <section className="list">
       <ul className="list__list">
+        {isSearching ? <p className="list__searching">Searching...</p> : ''}
         {songs
           ? (
             songs.map((song, i) => (
@@ -26,7 +27,9 @@ const SongList = ({ songs, chooseCurrentSong }) => {
               </li>
             )))
           : (
-            <p>No songs. Search something</p>
+            <p className="list__text">
+              Explore new music. Search for something
+            </p>
           ) }
       </ul>
     </section>
@@ -36,6 +39,7 @@ const SongList = ({ songs, chooseCurrentSong }) => {
 SongList.propTypes = {
   songs: PropTypes.arrayOf(PropTypes.object).isRequired,
   chooseCurrentSong: PropTypes.func.isRequired,
+  isSearching: PropTypes.bool.isRequired,
 };
 
 export default SongList;
