@@ -27,13 +27,18 @@ const SongWidget = ({ currentSong, currentSongIndex, chooseCurrentSong }) => {
   };
 
   const changeSong = (step) => {
-    chooseCurrentSong(currentSongIndex + step);
+    if (
+      (step === -1 && currentSongIndex !== 0 && currentSongIndex !== -1)
+      || (step === 1 && currentSongIndex !== 24)
+    ) {
+      chooseCurrentSong(currentSongIndex + step);
+    }
   };
 
   useEffect(() => {
     const aud = document.querySelector('#music');
     const wavesurfer = WaveSurfer.create({
-      barWidth: 1,
+      barWidth: 3,
       cursorWidth: 1,
       container: '#waveform',
       backend: 'MediaElement',

@@ -283,10 +283,11 @@ body {
   height: 75vh;
   border-radius: 5px;
   box-shadow: 0 5px 5px rgba(0,0,0,0.05);
-  overflow-y: auto;
   color: #8d9ba2;
   font-size: 14px;
   font-weight: bold;
+  overflow-y: scroll;
+  overflow-x: hidden;
 
   @media screen and (max-width: 1024px) {
     margin-top: 20px;
@@ -333,4 +334,21 @@ body {
 
 .active {
   color: #07a7e3;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: -webkit-linear-gradient(#31d9c3, #07a7e3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: darken(#6b7083, 10%);
 }
