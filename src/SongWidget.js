@@ -74,21 +74,23 @@ const SongWidget = ({ currentSong, currentSongIndex, chooseCurrentSong }) => {
       <div className="widget__controls controls">
         {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
         <audio src={currentSong.preview} id="music" />
-        <button
-          type="button"
-          className="controls__prev"
-          onClick={() => changeSong(-1)}
-        />
-        <button
-          type="button"
-          className="controls__play"
-          onClick={playPause}
-        />
-        <button
-          type="button"
-          className="controls__next"
-          onClick={() => changeSong(1)}
-        />
+        <div className="controls__buttons">
+          <button
+            type="button"
+            className="controls__prev"
+            onClick={() => changeSong(-1)}
+          />
+          <button
+            type="button"
+            className="controls__play"
+            onClick={playPause}
+          />
+          <button
+            type="button"
+            className="controls__next"
+            onClick={() => changeSong(1)}
+          />
+        </div>
         <div className="controls__img">
           <img
             src={currentSong.artist.picture}

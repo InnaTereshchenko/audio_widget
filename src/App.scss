@@ -78,7 +78,7 @@ body {
 
 .widget {
   width: 60%;
-  height: 257px;
+  height: 100%;
   border-radius: 5px;
   box-shadow: 0 5px 5px rgba(0,0,0,0.05);
   padding: 17px 13px;
@@ -121,9 +121,18 @@ body {
 
   &__waveform {
     width: 500px;
-    position: absolute;
-    right: 40px;
-    top: 50px;
+    position: relative;
+    left: 30px;
+    top: 30px;
+
+    @media screen and (max-width: 650px) {
+      left: 0;
+      width: 100%;
+    }
+
+    @media screen and (min-width: 1024px) and (max-width: 1220px) {
+      width: 370px;
+    }
   }
 
   &__current-time,
@@ -132,6 +141,10 @@ body {
     margin: 0;
     padding: 0;
     position: absolute;
+
+    @media screen and (max-width: 750px) {
+      top: 20px;
+    }
   }
 
   &__current-time {
@@ -152,6 +165,20 @@ body {
   @media screen and (max-width: 750px) {
     display: flex;
     flex-flow: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @media screen and (min-width: 1024px) and (max-width: 1220px) {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__buttons {
+    display: flex;
+    align-items: center;
   }
 
   &__prev,
@@ -183,12 +210,23 @@ body {
   }
 
   &__img {
-    width: 32px;
+    width: 332px;
     height: 32px;
-    background-color: #dee7eb;
     border-radius: 15px;
     position: relative;
     margin-left: 40px;
+
+    @media screen and (max-width: 400px) {
+      width: 270px;
+    }
+
+    @media screen and (max-width: 750px) {
+      margin: 20px 0;
+    }
+
+    @media screen and (min-width: 1024px) and (max-width: 1220px) {
+      margin: 20px 0;
+    }
   }
 
   &__picture {
@@ -204,6 +242,10 @@ body {
     transform: translateY(-50%);
     width: 300px;
     color: #72848c;
+
+    @media screen and (max-width: 400px) {
+      width: 200px;
+    }
   }
 
   &__title,
@@ -216,17 +258,23 @@ body {
     font-size: 14px;
     font-weight: bold;
     margin-bottom: 7px;
+
+    @media screen and (max-width: 400px) {
+      font-size: 12px;
+    }
   }
 
   &__artist {
     font-size: 12px;
+
+    @media screen and (max-width: 400px) {
+      font-size: 10px;
+    }
   }
 
   &__volume {
     display: flex;
     align-items: center;
-    position: absolute;
-    right: 15px;
   }
 }
 
