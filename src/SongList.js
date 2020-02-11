@@ -1,7 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+// eslint-disable-next-line import/no-duplicates
+import * as selectors from './store';
+// eslint-disable-next-line import/no-duplicates
+import * as actionCreators from './store';
 
-const SongList = ({ songs, chooseCurrentSong, isSearching, currentSong }) => {
+const SongList = ({
+  songs,
+  currentSong,
+  setCurrentSong,
+  searchingStatus,
+  setCurrentSongIndex,
+}) => {
   const getTime = (seconds) => {
     const min = Math.floor(seconds / 60);
     const sec = seconds % 60;
@@ -9,16 +20,21 @@ const SongList = ({ songs, chooseCurrentSong, isSearching, currentSong }) => {
     return `${min}:${(sec > 9) ? sec : `0${sec}`}`;
   };
 
+  const handleSongClick = (index) => {
+    setCurrentSong(index);
+    setCurrentSongIndex(index);
+  };
+
   return (
     <section className="list">
       <ul className="list__list">
-        {isSearching ? <p className="list__searching">Searching...</p> : ''}
+        {searchingStatus ? <p className="list__searching">Searching...</p> : ''}
         {songs
           ? (
             songs.map((song, i) => (
               // eslint-disable-next-line max-len
               // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
-              <li onClick={() => chooseCurrentSong(i)}>
+              <li onClick={() => handleSongClick(i)}>
                 <div className={currentSong.id === song.id
                   ? 'list__song active'
                   : 'list__song'}
@@ -41,9 +57,21 @@ const SongList = ({ songs, chooseCurrentSong, isSearching, currentSong }) => {
 
 SongList.propTypes = {
   songs: PropTypes.arrayOf(PropTypes.object).isRequired,
-  chooseCurrentSong: PropTypes.func.isRequired,
-  isSearching: PropTypes.bool.isRequired,
   currentSong: PropTypes.shape().isRequired,
+  setCurrentSong: PropTypes.func.isRequired,
+  searchingStatus: PropTypes.bool.isRequired,
+  setCurrentSongIndex: PropTypes.func.isRequired,
 };
 
-export default SongList;
+const mapStateToProps = state => ({
+  songs: selectors.getSongs(state),
+  currentSong: selectors.getCurrentSong(state),
+  searchingStatus: selectors.getSearchingStatus(state),
+});
+
+const mapDispatchToProps = {
+  setCurrentSong: actionCreators.setCurrentSong,
+  setCurrentSongIndex: actionCreators.setCurrentSongIndex,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SongList);

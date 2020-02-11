@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import WaveSurfer from 'wavesurfer.js';
 import { peaks } from './peaks';
+// eslint-disable-next-line import/no-duplicates
+import * as selectors from './store';
+// eslint-disable-next-line import/no-duplicates
+import * as actionCreators from './store';
 
 const secondsToTimestamp = (seconds) => {
   const sec = Math.floor(seconds);
@@ -16,7 +21,15 @@ const secondsToTimestamp = (seconds) => {
   return `${m}:${s}`;
 };
 
-const SongWidget = ({ currentSong, currentSongIndex, chooseCurrentSong }) => {
+const SongWidget = ({
+  currentSong,
+  currentSongIndex,
+  setCurrentSongIndex,
+  setCurrentSong,
+  playSong,
+  pauseSong,
+  playingStatus,
+}) => {
   const [wave, setWave] = useState(null);
   const [currentTime, setCurrentTime] = useState('00:00');
   const getTime = (seconds) => {
@@ -29,9 +42,10 @@ const SongWidget = ({ currentSong, currentSongIndex, chooseCurrentSong }) => {
   const changeSong = (step) => {
     if (
       (step === -1 && currentSongIndex !== 0 && currentSongIndex !== -1)
-      || (step === 1 && currentSongIndex !== 24)
+      || (step === 1 && currentSongIndex !== 24 && currentSongIndex !== -1)
     ) {
-      chooseCurrentSong(currentSongIndex + step);
+      setCurrentSong(currentSongIndex + step);
+      setCurrentSongIndex(currentSongIndex + step);
     }
   };
 
@@ -54,6 +68,7 @@ const SongWidget = ({ currentSong, currentSongIndex, chooseCurrentSong }) => {
   }, []);
 
   const playPause = () => {
+    playingStatus ? pauseSong() : playSong();
     wave.playPause();
     wave.on('audioprocess', updateTimer);
   };
@@ -87,7 +102,9 @@ const SongWidget = ({ currentSong, currentSongIndex, chooseCurrentSong }) => {
           />
           <button
             type="button"
-            className="controls__play"
+            className={playingStatus
+              ? 'controls__play playing'
+              : 'controls__play'}
             onClick={playPause}
           />
           <button
@@ -132,7 +149,24 @@ const SongWidget = ({ currentSong, currentSongIndex, chooseCurrentSong }) => {
 SongWidget.propTypes = {
   currentSong: PropTypes.shape().isRequired,
   currentSongIndex: PropTypes.number.isRequired,
-  chooseCurrentSong: PropTypes.func.isRequired,
+  setCurrentSongIndex: PropTypes.func.isRequired,
+  setCurrentSong: PropTypes.func.isRequired,
+  playSong: PropTypes.func.isRequired,
+  pauseSong: PropTypes.func.isRequired,
+  playingStatus: PropTypes.bool.isRequired,
 };
 
-export default SongWidget;
+const mapStateToProps = state => ({
+  currentSong: selectors.getCurrentSong(state),
+  currentSongIndex: selectors.getCurrentSongIndex(state),
+  playingStatus: selectors.getPlayingStatus(state),
+});
+
+const mapDispatchToProps = {
+  setCurrentSong: actionCreators.setCurrentSong,
+  setCurrentSongIndex: actionCreators.setCurrentSongIndex,
+  playSong: actionCreators.playSong,
+  pauseSong: actionCreators.pauseSong,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SongWidget);
