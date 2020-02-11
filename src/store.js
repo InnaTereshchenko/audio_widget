@@ -8,6 +8,9 @@ const ACTION_TYPE_SET_CURRENT_SONG_INDEX = 'SET_CURRENT_SONG_INDEX';
 const ACTION_TYPE_START_SEARCHING = 'START_SEARCHING';
 const ACTION_TYPE_FINISH_SEARCHING = 'FINISH_SEARCHING';
 
+const ACTION_TYPE_PLAY = 'PLAY';
+const ACTION_TYPE_PAUSE = 'PAUSE';
+
 // Action Creators
 export const setSongs = songs => ({
   type: ACTION_TYPE_SET_SONGS,
@@ -32,11 +35,20 @@ export const finishSearching = () => ({
   type: ACTION_TYPE_FINISH_SEARCHING,
 });
 
+export const playSong = () => ({
+  type: ACTION_TYPE_PLAY,
+});
+
+export const pauseSong = () => ({
+  type: ACTION_TYPE_PAUSE,
+});
+
 // Selectors
 export const getSongs = state => state.songs;
 export const getCurrentSong = state => state.currentSong;
 export const getCurrentSongIndex = state => state.currentSongIndex;
 export const getSearchingStatus = state => state.isSearching;
+export const getPlayingStatus = state => state.isPlaying;
 
 // Reducer
 const rootReducer = (state, action) => {
@@ -67,6 +79,16 @@ const rootReducer = (state, action) => {
         ...state,
         isSearching: false,
       };
+    case ACTION_TYPE_PLAY:
+      return {
+        ...state,
+        isPlaying: true,
+      };
+    case ACTION_TYPE_PAUSE:
+      return {
+        ...state,
+        isPlaying: false,
+      };
     default:
       return state;
   }
@@ -76,6 +98,7 @@ const initialState = {
   songs: null,
   isSearching: false,
   currentSongIndex: -1,
+  isPlaying: false,
   currentSong: {
     title: 'Nocturne in E Flat Major, Op. 9, No. 2',
     // eslint-disable-next-line max-len

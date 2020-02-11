@@ -178,6 +178,7 @@ body {
   &__buttons {
     display: flex;
     align-items: center;
+    position: relative;
   }
 
   &__prev,
@@ -206,6 +207,31 @@ body {
     background-image: url("icons/next.png");
     width: 17px;
     height: 14px;
+  }
+
+  &__prev:hover,
+  &__next:hover {
+    background-color: dimgrey;
+    background-blend-mode: screen;
+  }
+
+  &__play::before,
+  &__play::after {
+    content: "";
+    width: 5px;
+    height: 21px;
+    position: absolute;
+    top: 0;
+    background-color: #97a9b1;
+    opacity: 0;
+  }
+
+  &__play::before {
+    left: 58px;
+  }
+
+  &__play::after {
+    left: 66px;
   }
 
   &__img {
@@ -333,6 +359,16 @@ body {
 
 .active {
   color: #07a7e3;
+}
+
+.playing {
+  background-image: none;
+  background-color: white;
+
+  &::before,
+  &::after {
+    opacity: 1;
+  }
 }
 
 ::-webkit-scrollbar {

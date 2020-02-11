@@ -26,6 +26,9 @@ const SongWidget = ({
   currentSongIndex,
   setCurrentSongIndex,
   setCurrentSong,
+  playSong,
+  pauseSong,
+  playingStatus,
 }) => {
   const [wave, setWave] = useState(null);
   const [currentTime, setCurrentTime] = useState('00:00');
@@ -39,7 +42,7 @@ const SongWidget = ({
   const changeSong = (step) => {
     if (
       (step === -1 && currentSongIndex !== 0 && currentSongIndex !== -1)
-      || (step === 1 && currentSongIndex !== 24)
+      || (step === 1 && currentSongIndex !== 24 && currentSongIndex !== -1)
     ) {
       setCurrentSong(currentSongIndex + step);
       setCurrentSongIndex(currentSongIndex + step);
@@ -65,6 +68,7 @@ const SongWidget = ({
   }, []);
 
   const playPause = () => {
+    playingStatus ? pauseSong() : playSong();
     wave.playPause();
     wave.on('audioprocess', updateTimer);
   };
@@ -98,7 +102,9 @@ const SongWidget = ({
           />
           <button
             type="button"
-            className="controls__play"
+            className={playingStatus
+              ? 'controls__play playing'
+              : 'controls__play'}
             onClick={playPause}
           />
           <button
@@ -145,16 +151,22 @@ SongWidget.propTypes = {
   currentSongIndex: PropTypes.number.isRequired,
   setCurrentSongIndex: PropTypes.func.isRequired,
   setCurrentSong: PropTypes.func.isRequired,
+  playSong: PropTypes.func.isRequired,
+  pauseSong: PropTypes.func.isRequired,
+  playingStatus: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
   currentSong: selectors.getCurrentSong(state),
   currentSongIndex: selectors.getCurrentSongIndex(state),
+  playingStatus: selectors.getPlayingStatus(state),
 });
 
 const mapDispatchToProps = {
   setCurrentSong: actionCreators.setCurrentSong,
   setCurrentSongIndex: actionCreators.setCurrentSongIndex,
+  playSong: actionCreators.playSong,
+  pauseSong: actionCreators.pauseSong,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SongWidget);
