@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import WaveSurfer from 'wavesurfer.js';
 import { peaks } from './peaks';
+// eslint-disable-next-line import/no-duplicates
+import * as selectors from './store';
+// eslint-disable-next-line import/no-duplicates
+import * as actionCreators from './store';
 
 const secondsToTimestamp = (seconds) => {
   const sec = Math.floor(seconds);
@@ -16,7 +21,12 @@ const secondsToTimestamp = (seconds) => {
   return `${m}:${s}`;
 };
 
-const SongWidget = ({ currentSong, currentSongIndex, chooseCurrentSong }) => {
+const SongWidget = ({
+  currentSong,
+  currentSongIndex,
+  setCurrentSongIndex,
+  setCurrentSong,
+}) => {
   const [wave, setWave] = useState(null);
   const [currentTime, setCurrentTime] = useState('00:00');
   const getTime = (seconds) => {
@@ -31,7 +41,8 @@ const SongWidget = ({ currentSong, currentSongIndex, chooseCurrentSong }) => {
       (step === -1 && currentSongIndex !== 0 && currentSongIndex !== -1)
       || (step === 1 && currentSongIndex !== 24)
     ) {
-      chooseCurrentSong(currentSongIndex + step);
+      setCurrentSong(currentSongIndex + step);
+      setCurrentSongIndex(currentSongIndex + step);
     }
   };
 
@@ -132,7 +143,18 @@ const SongWidget = ({ currentSong, currentSongIndex, chooseCurrentSong }) => {
 SongWidget.propTypes = {
   currentSong: PropTypes.shape().isRequired,
   currentSongIndex: PropTypes.number.isRequired,
-  chooseCurrentSong: PropTypes.func.isRequired,
+  setCurrentSongIndex: PropTypes.func.isRequired,
+  setCurrentSong: PropTypes.func.isRequired,
 };
 
-export default SongWidget;
+const mapStateToProps = state => ({
+  currentSong: selectors.getCurrentSong(state),
+  currentSongIndex: selectors.getCurrentSongIndex(state),
+});
+
+const mapDispatchToProps = {
+  setCurrentSong: actionCreators.setCurrentSong,
+  setCurrentSongIndex: actionCreators.setCurrentSongIndex,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SongWidget);
